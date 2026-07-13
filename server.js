@@ -1,13 +1,18 @@
 // server.js
 // Ciste Node.js (bez Express, bez ineho npm balicka) - HTTP server + node:sqlite.
 // Spustenie: node server.js   (najprv raz "node seed.js" ak data.db este neexistuje)
+import http from "http"
 
-const http = require("http");
-const fs = require("fs");
-const path = require("path");
-const { DatabaseSync } = require("node:sqlite");
+import { DatabaseSync } from "node:sqlite";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-const PORT = process.env.PORT || 3000;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const PORT = process.env.PORT || 4000;
 const DB_PATH = path.join(__dirname, "data.db");
 const PUBLIC_DIR = path.join(__dirname, "public");
 

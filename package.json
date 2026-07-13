@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Lokalny dashboard na precvicovanie SQL queries - bez zavislosti, vyuziva vstavany node:sqlite modul.",
   "main": "server.js",
-  "type": "commonjs",
+  "type": "module",
   "engines": {
     "node": ">=22.5.0"
   },
@@ -12,5 +12,10 @@
     "start": "node server.js",
     "dev": "node server.js"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "postgres": "^3.4.9",
+    "sqlite": "^5.1.1"
+  }
 }

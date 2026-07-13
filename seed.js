@@ -6,14 +6,21 @@
 // Spustenie: node seed.js
 // Vyzaduje Node.js 22.5+ (vstavany modul node:sqlite, ziadny npm install).
 
-const { DatabaseSync } = require("node:sqlite");
-const fs = require("fs");
-const path = require("path");
+import { DatabaseSync } from "node:sqlite";
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const DB_PATH = path.join(__dirname, "data.db");
 
-// Zacni od cista, nech je seed idempotentny
-if (fs.existsSync(DB_PATH)) fs.unlinkSync(DB_PATH);
+// Start from a clean database
+if (fs.existsSync(DB_PATH)) {
+  fs.unlinkSync(DB_PATH);
+}
 
 const db = new DatabaseSync(DB_PATH);
 
