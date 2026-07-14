@@ -1,21 +1,21 @@
 {
-  "name": "sql-practice-dashboard",
-  "version": "1.0.0",
-  "description": "Lokalny dashboard na precvicovanie SQL queries - bez zavislosti, vyuziva vstavany node:sqlite modul.",
-  "main": "server.js",
+  "name": "sql-practice-next",
+  "version": "2.0.0",
+  "private": true,
   "type": "module",
-  "engines": {
-    "node": ">=22.5.0"
-  },
   "scripts": {
-    "seed": "node seed.js",
-    "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "seed": "node seed-neon.js"
   },
-  "license": "MIT",
   "dependencies": {
-    "fs": "^0.0.1-security",
-    "postgres": "^3.4.9",
-    "sqlite": "^5.1.1"
+    "next": "16.2.10",
+    "pg": "8.22.0",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
+  },
+  "engines": {
+    "node": ">=20.9.0"
   }
 }
