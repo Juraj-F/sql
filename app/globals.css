@@ -44,6 +44,7 @@ button, textarea { font: inherit; }
 .topbar { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
 .topbar h1 { margin: 0 0 6px; font-size: 22px; }
 .topbar-sub { margin: 0; color: var(--text-dim); font-size: 13px; max-width: 620px; }
+.page-button { background: transparent }
 .status { font-family: var(--mono); font-size: 11px; padding: 4px 10px; border-radius: 20px; white-space: nowrap; }
 .status.connected { color: var(--green); border: 1px solid var(--green); }
 .status.disconnected { color: var(--red); border: 1px solid var(--red); }

@@ -5,6 +5,8 @@ import ExampleList from "@/components/ExampleList";
 import ResultsTable from "@/components/ResultsTable";
 import SchemaList from "@/components/SchemaList";
 import SqlEditor from "@/components/SqlEditor";
+import { useRouter } from "next/navigation";
+
 
 const DEFAULT_QUERY = "SELECT * FROM projects LIMIT 20;";
 
@@ -24,6 +26,8 @@ export default function SqlDashboard() {
   const [error, setError] = useState("");
   const [runInfo, setRunInfo] = useState("");
   const [connected, setConnected] = useState(false);
+
+  const router = useRouter()
 
   const runQuery = useCallback(async () => {
     if (!sql.trim() || loadingQuery) return;
@@ -112,8 +116,15 @@ export default function SqlDashboard() {
               Napíš read-only PostgreSQL dotaz, spusti ho a pozri si výsledky.
             </p>
           </div>
+          <div>
+          <button className="page-button status connected"
+            onClick={() => router.push("/dashboard")}
+          >
+            Company Dashboard
+          </button>
           <div className={`status ${connected ? "connected" : "disconnected"}`}>
             {connected ? "pripojené" : "nepripojené"}
+          </div>
           </div>
         </header>
 
