@@ -21,7 +21,7 @@ function InputField({
   step,
 }) {
   return (
-    <label>
+    <label className="flexFormat">
       <span>{label}</span>
 
       <input
@@ -90,7 +90,7 @@ export default function FilterData({
   onApply,
   onReset,
 }) {
-  
+
   function handleChange(event) {
     const { name, value, type, checked } = event.target;
 
@@ -126,7 +126,7 @@ export default function FilterData({
         </label>
       </div>
 
-      <div>
+      <div className="upper-filter">
         {dataset === "employees" && (
           <>
             <InputField

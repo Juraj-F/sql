@@ -17,6 +17,7 @@
 html, body { margin: 0; min-height: 100%; background: var(--bg); color: var(--text); font-family: var(--sans); }
 button, textarea { font: inherit; }
 
+.upper-filter { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-bottom: 1px solid var(--border); background: var(--bg-elevated); }
 .app-shell { display: grid; grid-template-columns: 300px minmax(0, 1fr); min-height: 100vh; }
 .sidebar { background: var(--bg-panel); border-right: 1px solid var(--border); padding: 20px 16px; overflow-y: auto; max-height: 100vh; position: sticky; top: 0; }
 .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 24px; }
@@ -77,4 +78,210 @@ tbody tr:hover { background: rgba(79, 209, 197, .04); }
   .app-shell { grid-template-columns: 1fr; }
   .sidebar { position: static; max-height: none; border-right: 0; border-bottom: 1px solid var(--border); }
   .main-content { padding: 20px 16px; }
+}
+
+
+
+
+
+
+/* Dialog overlay */
+
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(5, 10, 15, 0.72);
+  backdrop-filter: blur(3px);
+}
+
+/* Dialog window */
+
+.dialog-panel {
+  width: min(100%, 620px);
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.02);
+}
+
+/* Dialog heading */
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-elevated);
+}
+
+.dialog-header h2 {
+  margin: 0;
+  font-size: 17px;
+}
+
+.dialog-header p {
+  margin: 5px 0 0;
+  color: var(--text-dim);
+  font-size: 12.5px;
+}
+
+.dialog-close {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.dialog-close:hover:not(:disabled) {
+  color: var(--text);
+  border-color: var(--border);
+  background: var(--bg-panel);
+}
+
+.dialog-close:disabled {
+  opacity: 0.5;
+  cursor: wait;
+}
+
+/* Form */
+
+.dialog-panel form {
+  padding: 20px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.form-field-wide {
+  grid-column: 1 / -1;
+}
+
+.form-field label {
+  color: var(--text-dim);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.form-input {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 9px 10px;
+  outline: none;
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: 13px;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.form-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(79, 209, 197, 0.12);
+}
+
+.form-input:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.form-input.input-error {
+  border-color: var(--red);
+}
+
+.form-input.input-error:focus {
+  box-shadow: 0 0 0 3px rgba(224, 101, 74, 0.12);
+}
+
+.field-error {
+  color: #ff9a84;
+  font-size: 11.5px;
+}
+
+.form-submit-error {
+  margin-top: 16px;
+  padding: 10px 12px;
+  border: 1px solid #5a2c26;
+  border-radius: 6px;
+  background: #3a1f1c;
+  color: #ffb4a3;
+  font-size: 12.5px;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 600px) {
+  .dialog-overlay {
+    padding: 10px;
+  }
+
+  .dialog-panel {
+    max-height: calc(100vh - 20px);
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-field-wide {
+    grid-column: auto;
+  }
+
+  .dialog-actions {
+    flex-direction: column-reverse;
+  }
+
+  .dialog-actions .btn {
+    width: 100%;
+  }
+}
+
+
+
+/* clerk implement  */
+
+
+.auth-page {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: var(--bg);
 }

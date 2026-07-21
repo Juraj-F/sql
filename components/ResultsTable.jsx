@@ -1,3 +1,4 @@
+
 function badgeClass(value) {
   if (value === "high") return "badge-high";
   if (value === "medium") return "badge-medium";
@@ -16,6 +17,7 @@ export default function ResultsTable({ result, hasRun }) {
   const rows = result?.rows ?? [];
 
   return (
+  
     <section className="results-block">
       <div className="results-header">
         <h2>Výsledky</h2>
@@ -66,5 +68,6 @@ export default function ResultsTable({ result, hasRun }) {
         )}
       </div>
     </section>
+
   );
 }

@@ -10,128 +10,33 @@ import {
 import FilterData from "./filteredData";
 import styles from './CompanyDashboard.module.css'
 import { fetchJson } from "@/lib/fetchJson.js";
-
-
+import NewEmployeeForm from "./newEmployeeForm";
+import { useAuth } from "@clerk/nextjs";
+import DashboardControls from "./dashboardControls";
+import { DEFAULT_FILTERS } from "@/lib/company-dashboard/defaultFilters";
+import { SORT_OPTIONS } from "@/lib/company-dashboard/sortOptions";
+import { buildDashboardQueryString } from "@/lib/company-dashboard/buildDashboardQueryString";
+import { MatchingRecords } from "./matchingRecords";
+import { DashboardTable } from "./dashboardTable";
 
 const DEFAULT_PAGE_SIZE = 25;
 
-const DEFAULT_FILTERS = {
-  search: "",
-  id: "",
-  email: "",
-  departmentId: "",
-  role: "",
-  hireFrom: "",
-  hireTo: "",
-  country: "",
-  segment: "",
-  managerId: "",
-  projectId: "",
-  supplierId: "",
-  customerId: "",
-  status: "",
-  criticality: "",
-  material: "",
-  minRating: "",
-  maxLeadTime: "",
-  minBudget: "",
-  maxBudget: "",
-  minAmount: "",
-  maxAmount: "",
-  dateFrom: "",
-  dateTo: "",
-  updatedAfter: "",
-  product: "",
-  overBudget: false,
-  missingDelivery: false,
-  hasOrders: false,
-};
-
-const SORT_OPTIONS = {
-  employees: [
-    ["name", "Name"],
-    ["hire_date", "Hire date"],
-    ["department", "Department"],
-  ],
-  suppliers: [
-    ["name", "Name"],
-    ["rating", "Rating"],
-    ["lead_time_days", "Lead time"],
-  ],
-  projects: [
-    ["name", "Name"],
-    ["start_date", "Start date"],
-    ["budget", "Budget"],
-    ["budget_spent", "Spent"],
-    ["status", "Status"],
-  ],
-  components: [
-    ["name", "Name"],
-    ["updated_at", "Updated"],
-    ["unit_cost", "Unit cost"],
-    ["criticality", "Criticality"],
-  ],
-  customers: [
-    ["name", "Name"],
-    ["created_at", "Created"],
-    ["total_revenue", "Revenue"],
-    ["order_count", "Order count"],
-  ],
-  orders: [
-    ["order_date", "Order date"],
-    ["total_amount", "Amount"],
-    ["customer", "Customer"],
-  ],
-};
-
-function formatColumn(column) {
-  return column
-    .replaceAll("_", " ")
-    .replace(/\b\w/g, (letter) => letter.toUpperCase());
-}
-
-function formatValue(value, column) {
-  if (value === null || value === undefined) {
-    return "—";
-  }
-
-  if (
-    column.includes("date") ||
-    column.includes("updated_at")
-  ) {
-    const date = new Date(value);
-
-    if (!Number.isNaN(date.getTime())) {
-      return new Intl.DateTimeFormat("en-GB", {
-        dateStyle: "medium",
-      }).format(date);
-    }
-  }
-
-  if (
-    column.includes("budget") ||
-    column.includes("amount") ||
-    column.includes("revenue") ||
-    column.includes("cost")
-  ) {
-    const number = Number(value);
-
-    if (!Number.isNaN(number)) {
-      return new Intl.NumberFormat("en-GB", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2,
-      }).format(number);
-    }
-  }
-
-  if (typeof value === "boolean") {
-    return value ? "Yes" : "No";
-  }
-
-  return String(value);
-}
-
 export default function CompanyDashboard() {
+  const {
+    isLoaded,
+    isSignedIn,
+    userId,
+    orgId,
+    orgRole,
+  } = useAuth();
+
+  console.log("isLoaded isSignedIn, userId, orgId, orgRole",isLoaded,
+    isSignedIn,
+    userId,
+    orgId,
+    orgRole,)
+
+
   const [dataset, setDataset] = useState("projects");
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
   const [options, setOptions] = useState({});
@@ -154,7 +59,11 @@ export default function CompanyDashboard() {
   const [error, setError] = useState("");
   const [mounted, setMounted] = useState(false);
 
-// console.log("filters", filters)
+  const [showEmployeeForm, setShowEmployeeForm]= useState(false)
+
+
+const handleEmployeeCreated = ()=>{
+}
 
 useEffect(() => {
   setMounted(true);
@@ -170,30 +79,16 @@ useEffect(() => {
     SORT_OPTIONS[dataset] ?? [];
 
 
-  const queryString = useMemo(() => {
-    const params = new URLSearchParams({
+  const queryString = useMemo(() =>
+    buildDashboardQueryString({
       dataset,
-      page: String(page),
-      pageSize: String(pageSize),
+      page,
+      pageSize,
+      filters,
       sortBy,
       sortDirection,
-    });
-    console.log("params before setting filter", params)
-
-    Object.entries(filters).forEach(([key, value]) => {
-      if (
-        value !== "" &&
-        value !== null &&
-        value !== undefined &&
-        value !== false
-      ) {
-        params.set(key, String(value));
-      }
-    });
-
-    console.log("params in query string after setting filter", params)
-    return params.toString();
-  }, [
+    }),
+    [
     dataset,
     filters,
     page,
@@ -309,7 +204,6 @@ useEffect(() => {
     setPage(1);
   }
 
-
   if (!mounted) {
   return (
     <section className={styles.dashboard}>
@@ -335,6 +229,7 @@ useEffect(() => {
             components, customers, and orders.
           </p>
         </div>
+          <DashboardControls />
 
         <button
           type="button"
@@ -344,6 +239,22 @@ useEffect(() => {
           Refresh
         </button>
       </header>
+
+       <button
+        type="button"
+        onClick={() => setShowEmployeeForm(true)}
+        className="rounded bg-blue-600 px-4 py-2 text-white"
+      >
+        New employee
+      </button>
+
+      {showEmployeeForm && (
+        <NewEmployeeForm
+          open={showEmployeeForm}
+          onSuccess={handleEmployeeCreated}
+          onCancel={() => setShowEmployeeForm(false)}
+        />
+      )}
 
       <FilterData
         dataset={dataset}
@@ -362,19 +273,11 @@ useEffect(() => {
         </div>
       )}
 
-      <div className={styles.summary}>
-        <article>
-          <span>Matching records</span>
-          <strong>{totalRows}</strong>
-        </article>
-
-        {Object.entries(summary).map(([key, value]) => (
-          <article key={key}>
-            <span>{formatColumn(key)}</span>
-            <strong>{formatValue(value, key)}</strong>
-          </article>
-        ))}
-      </div>
+      <MatchingRecords
+        styles={styles}
+        totalRows={totalRows}
+        summary={summary}
+      />
 
       <div className={styles.tableToolbar}>
         <div>
@@ -434,50 +337,13 @@ useEffect(() => {
           </select>
         </label>
       </div>
-
-      <div className={styles.tableContainer}>
-        <table>
-          <thead>
-            <tr>
-              {columns.map((column) => (
-                <th key={column}>
-                  {formatColumn(column)}
-                </th>
-              ))}
-            </tr>
-          </thead>
-
-          <tbody>
-            {!loading &&
-              rows.map((row, rowIndex) => (
-                <tr
-                  key={
-                    row.id ??
-                    `${dataset}-${page}-${rowIndex}`
-                  }
-                >
-                  {columns.map((column) => (
-                    <td key={column}>
-                      {formatValue(row[column], column)}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-          </tbody>
-        </table>
-
-        {loading && (
-          <div className={styles.state}>
-            Loading data…
-          </div>
-        )}
-
-        {!loading && rows.length === 0 && !error && (
-          <div className={styles.state}>
-            No records match the selected filters.
-          </div>
-        )}
-      </div>
+      
+      <DashboardTable
+        columns={columns}
+        loading={loading}
+        rows={rows}
+        styles={styles}
+      />
 
       <footer className={styles.pagination}>
         <button

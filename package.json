@@ -10,10 +10,12 @@
     "seed": "node seed-neon.js"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.5.20",
     "next": "16.2.10",
     "pg": "8.22.0",
     "react": "19.2.7",
-    "react-dom": "19.2.7"
+    "react-dom": "19.2.7",
+    "zustand": "^5.0.14"
   },
   "engines": {
     "node": ">=20.9.0"
