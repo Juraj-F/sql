@@ -20,8 +20,8 @@ export async function POST(request) {
     if(!employee) return
     
     const clerk = await clerkClient();
-
-      const invitation = await clerk.invitations.createInvitation({
+    
+    await clerk.invitations.createInvitation({
             emailAddress: employee.email,
             redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL}/sign-up`,
       })

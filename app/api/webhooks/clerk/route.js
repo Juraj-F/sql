@@ -1,6 +1,7 @@
 import { verifyWebhook } from "@clerk/nextjs/webhooks";
 import { isnerClerkIdIntoDb } from "@/lib/users/insertClerkIdIntoDb";
 import { updateUserInDb } from "@/lib/users/updateUserInDb";
+import { upsertClerkUserByEmail } from "@/lib/users/upsertClerkUserByEmail";
 
 export async function POST(request) {
   let event;
@@ -21,6 +22,7 @@ export async function POST(request) {
     if(
       event.type === "user.created"
     ){
+      await upsertClerkUserByEmail(event.data)
       await isnerClerkIdIntoDb(event.data)
     }
 
