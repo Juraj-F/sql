@@ -1,7 +1,7 @@
 "use client";
 
 const DATASETS = [
-  { value: "employees", label: "Employees" },
+  { value: "users", label: "Users" },
   { value: "suppliers", label: "Suppliers" },
   { value: "projects", label: "Projects" },
   { value: "components", label: "Components" },
@@ -127,10 +127,10 @@ export default function FilterData({
       </div>
 
       <div className="upper-filter">
-        {dataset === "employees" && (
+        {dataset === "users" && (
           <>
             <InputField
-              label="Employee ID"
+              label="User ID"
               name="id"
               type="number"
               min="1"
@@ -143,7 +143,7 @@ export default function FilterData({
               name="search"
               value={filters.search}
               onChange={handleChange}
-              placeholder="Search employee name"
+              placeholder="Search user name"
             />
 
             <InputField

@@ -1,6 +1,6 @@
 import { verifyWebhook } from "@clerk/nextjs/webhooks";
-import { upsertUserFromClerk } from "@/lib/users/upsertUserFromClerk";
-import { deleteUserFromClerk } from "@/lib/users/deleteUserFromClerk";
+import { isnerClerkIdIntoDb } from "@/lib/users/insertClerkIdIntoDb";
+import { updateUserInDb } from "@/lib/users/updateUserInDb";
 
 export async function POST(request) {
   console.log("clerk webhook is triggered", request)
@@ -17,25 +17,28 @@ export async function POST(request) {
     );
   }
 
-  console.log("event from webhook", event)
+  console.log("event type from webhook", event.type)
 
   try {
-    if (
-      event.type === "user.created" ||
-      event.type === "user.updated"
-    ) {
-      await upsertUserFromClerk(event.data);
-    }
 
     if(
+      event.type === "user.created"
+    ){
+      await isnerClerkIdIntoDb(event.data)
+    }
+
+    if (
+      event.type === "user.updated" &&
       event.data.id
-    ){await upsertUserFromClerk(event.data);}
+    ) {
+      await updateUserInDb(event.data);
+    }
 
     if (
       event.type === "user.deleted" &&
       event.data.id
     ) {
-      await deleteUserFromClerk(event.data.id);
+      await deleteUserInDb(event.data.id);
     }
 
     return Response.json({ received: true });

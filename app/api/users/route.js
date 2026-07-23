@@ -1,5 +1,6 @@
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import { upsertEmployeeFromClerk } from "@/lib/employees/upsertEmployeeFromClerk";
+import { createUserInDb } from "@/lib/users/createUserInDb";
+
 
 export async function POST(request) {
   const { userId } = await auth();
@@ -15,7 +16,7 @@ export async function POST(request) {
   try {
     const data = await request.json();
 
-    const employee = await upsertEmployeeFromClerk(data);
+    const employee = await createUserInDb(data);
 
     if(!employee) return
     

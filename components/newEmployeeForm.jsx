@@ -90,7 +90,7 @@ export default function NewEmployeeForm({ onSuccess, onCancel, open }) {
     setSubmitError("");
 
     try {
-      const response = await fetch("/api/employees", {
+      const response = await fetch("/api/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

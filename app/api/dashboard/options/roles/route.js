@@ -7,7 +7,7 @@ export async function GET() {
     const roles= await 
     query(`
       SELECT DISTINCT role AS value, role AS label
-      FROM employees
+      FROM users
       ORDER BY role
     `)
 
