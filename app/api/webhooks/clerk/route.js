@@ -16,10 +16,6 @@ export async function POST(request) {
     );
   }
 
-  const {type, data} = event
-
-  console.log("type and data destruct", type, data)
-
   try {
     if (
       event.type === "user.created" ||
@@ -27,6 +23,10 @@ export async function POST(request) {
     ) {
       await upsertUserFromClerk(event.data);
     }
+
+    if(
+      event.data.id
+    ){await upsertUserFromClerk(event.data);}
 
     if (
       event.type === "user.deleted" &&

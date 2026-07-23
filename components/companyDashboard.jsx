@@ -106,16 +106,16 @@ useEffect(() => {
       projects,
     ] = await Promise.all([
       fetchJson(
-        "/api/company-dashboard/options/criticalities"
+        "/api/dashboard/options/criticalities"
       ),
       fetchJson(
-        "/api/company-dashboard/options/materials"
+        "/api/dashboard/options/materials"
       ),
       fetchJson(
-        "/api/company-dashboard/options/suppliers"
+        "/api/dashboard/options/suppliers"
       ),
       fetchJson(
-        "/api/company-dashboard/options/projects"
+        "/api/dashboard/options/projects"
       ),
     ]);
 
@@ -144,7 +144,7 @@ useEffect(() => {
 
   try {
     const data = await fetchJson(
-      `/api/company-dashboard?${queryString}`
+      `/api/dashboard?${queryString}`
     );
 
     setRows(data.rows ?? []);
@@ -339,6 +339,7 @@ useEffect(() => {
       </div>
       
       <DashboardTable
+        error={error}
         columns={columns}
         loading={loading}
         rows={rows}

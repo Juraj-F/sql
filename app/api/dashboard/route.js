@@ -9,6 +9,7 @@ export async function GET(request) {
     const result = await getDashboardData(queryParams);
 
     return Response.json(result);
+    
   } catch (error) {
     console.error("Company dashboard request failed:", error);
 

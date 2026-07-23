@@ -1,6 +1,7 @@
      import { formatColumn, formatValue } from "@/lib/company-dashboard/formatters"
      
      export function DashboardTable({
+        error,        
         columns,
         loading,
         rows,
