@@ -16,6 +16,8 @@ export async function POST(request) {
     );
   }
 
+  console.log("event from webhook", event)
+
   try {
     if (
       event.type === "user.created" ||

@@ -1,7 +1,5 @@
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { upsertEmployeeFromClerk } from "@/lib/employees/upsertEmployeeFromClerk";
-import { updateEmployee } from "@/lib/employees/updateEmployee";
-import { redirect } from "next/dist/server/api-utils";
 
 export async function POST(request) {
   const { userId } = await auth();
@@ -16,8 +14,6 @@ export async function POST(request) {
 
   try {
     const data = await request.json();
-
-    console.log("json data", data)
 
     const employee = await upsertEmployeeFromClerk(data);
 
