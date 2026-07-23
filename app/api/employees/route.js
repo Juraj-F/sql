@@ -27,7 +27,7 @@ export async function POST(request) {
 
       const invitation = await clerk.invitations.createInvitation({
             emailAddress: employee.email,
-            // redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL}/sign-up`,
+            redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL}/sign-up`,
       })
       console.log("invitation", invitation)
 
