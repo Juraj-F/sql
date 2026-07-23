@@ -3,6 +3,7 @@ import { upsertUserFromClerk } from "@/lib/users/upsertUserFromClerk";
 import { deleteUserFromClerk } from "@/lib/users/deleteUserFromClerk";
 
 export async function POST(request) {
+  console.log("clerk webhooks triggered", request)
   let event;
 
   try {
