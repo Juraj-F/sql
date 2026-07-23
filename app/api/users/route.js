@@ -4,7 +4,6 @@ import { createUserInDb } from "@/lib/users/createUserInDb";
 
 export async function POST(request) {
   const { userId } = await auth();
-  console.log("raw request", request)
 
   if (!userId) {
     return Response.json(
@@ -26,7 +25,6 @@ export async function POST(request) {
             emailAddress: employee.email,
             redirectUrl: `${process.env.NEXT_PUBLIC_APP_URL}/sign-up`,
       })
-      console.log("invitation", invitation)
 
     return Response.json(
       { employee },

@@ -3,7 +3,6 @@ import { isnerClerkIdIntoDb } from "@/lib/users/insertClerkIdIntoDb";
 import { updateUserInDb } from "@/lib/users/updateUserInDb";
 
 export async function POST(request) {
-  console.log("clerk webhook is triggered", request)
   let event;
 
   try {
@@ -16,8 +15,6 @@ export async function POST(request) {
       { status: 400 },
     );
   }
-
-  console.log("event type from webhook", event.type)
 
   try {
 
