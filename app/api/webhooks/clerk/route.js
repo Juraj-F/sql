@@ -1,6 +1,6 @@
 import { verifyWebhook } from "@clerk/nextjs/webhooks";
 import { updateUserInDb } from "@/lib/users/updateUserInDb";
-import { upsertClerkUserByEmail } from "@/lib/users/upsertClerkUserByEmail";
+import { upsertClerkUserByEmail, checkEmailInDb } from "@/lib/users/upsertClerkUserByEmail";
 import { insertClerkIdIntoDb } from "@/lib/users/insertClerkIdIntoDb";
 
 export async function POST(request) {
