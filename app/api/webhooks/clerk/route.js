@@ -1,7 +1,8 @@
 import { verifyWebhook } from "@clerk/nextjs/webhooks";
-import { isnerClerkIdIntoDb } from "@/lib/users/insertClerkIdIntoDb";
 import { updateUserInDb } from "@/lib/users/updateUserInDb";
 import { upsertClerkUserByEmail } from "@/lib/users/upsertClerkUserByEmail";
+import {insertClerkIdIntoDb} from "@/lib/users/insertClerkIdIntoDb";
+
 
 export async function POST(request) {
   let event;
@@ -23,10 +24,16 @@ export async function POST(request) {
     if(
       event.type === "user.created"
     ){
-      console.log("event data", event.data)
-      // await upsertClerkUserByEmail(event.data)
-      await isnerClerkIdIntoDb(event.data)
-    }
+      const emailToCheck = event.data.email_addresses[0].email_address
+      const emailInDb=await checkEmailInDb(emailToCheck)
+      console.log("email is in DB",emailInDb)
+
+    if (emailInDb) {
+          await insertClerkIdIntoDb(event.data);
+      } else {
+          await upsertClerkUserByEmail(event.data);
+      }
+          }
 
     if (
       event.type === "user.updated" &&
