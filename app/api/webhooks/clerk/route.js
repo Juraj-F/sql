@@ -7,6 +7,7 @@ export async function POST(request) {
   let event;
 
   try {
+        console.log("Starting webhook verification");
     event = await verifyWebhook(request);
   } catch (error) {
     console.error("Invalid Clerk webhook:", error);
@@ -24,11 +25,12 @@ export async function POST(request) {
       event.type === "user.created"
     ){
       const emailToCheck = event.data.email_addresses[0].email_address
+      console.log("email is in DB",emailToCheck)
       const emailInDb=await checkEmailInDb(emailToCheck)
 
       console.log("email is in DB",emailInDb)
 
-    if (emailInDb.inDb===true) {
+    if (emailInDb) {
           await insertClerkIdIntoDb(event.data);
       } else {
           await upsertClerkUserByEmail(event.data);
