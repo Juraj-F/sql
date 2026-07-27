@@ -25,9 +25,10 @@ export async function POST(request) {
     ){
       const emailToCheck = event.data.email_addresses[0].email_address
       const emailInDb=await checkEmailInDb(emailToCheck)
+
       console.log("email is in DB",emailInDb)
 
-    if (emailInDb) {
+    if (emailInDb.inDb===true) {
           await insertClerkIdIntoDb(event.data);
       } else {
           await upsertClerkUserByEmail(event.data);
