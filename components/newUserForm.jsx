@@ -1,20 +1,25 @@
 "use client";
 
 import { useState } from "react";
+import { departmentOptions } from "@/lib/company-dashboard/departments";
+import { rolesOptions } from "@/lib/company-dashboard/rolesOptions";
 
 const INITIAL_FORM = {
   firstName: "",
   lastName: "",
   role: "",
   email: "",
+  department:"",
+  hireDate: "",
   salary: "",
 };
 
-export default function NewEmployeeForm({ onSuccess, onCancel, open }) {
+export default function NewUserForm({ onSuccess, onCancel, open }) {
   const [form, setForm] = useState(INITIAL_FORM);
   const [fieldErrors, setFieldErrors] = useState({});
   const [submitError, setSubmitError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   if (!open) {
     return null;
@@ -61,6 +66,19 @@ export default function NewEmployeeForm({ onSuccess, onCancel, open }) {
       }
     }
 
+    if(!form.department){
+      errors.department = "Department is required.";
+    }
+
+   if (form.hireDate) {
+
+    const today = new Date().toISOString().split("T")[0];
+
+    if (form.hireDate > today) {
+        errors.hireDate =
+            "Hire date cannot be in the future.";
+    }}
+
     if (form.salary === "") {
       errors.salary = "Salary is required.";
     } else {
@@ -99,6 +117,8 @@ export default function NewEmployeeForm({ onSuccess, onCancel, open }) {
           firstName: form.firstName.trim(),
           lastName: form.lastName.trim(),
           role: form.role.trim(),
+          department: form.department,
+          hireDate: form.hireDate,
           email: form.email.trim(),
           salary: Number(form.salary),
         }),
@@ -108,14 +128,14 @@ export default function NewEmployeeForm({ onSuccess, onCancel, open }) {
 
       if (!response.ok) {
         throw new Error(
-          result?.error ?? "The employee could not be created.",
+          result?.error ?? "The user could not be created.",
         );
       }
 
       setForm(INITIAL_FORM);
       setFieldErrors({});
 
-      onSuccess?.(result.employee);
+      onSuccess?.(result.user);
     } catch (error) {
       setSubmitError(
         error instanceof Error
@@ -154,9 +174,9 @@ export default function NewEmployeeForm({ onSuccess, onCancel, open }) {
       <div className="dialog-panel">
         <div className="dialog-header">
           <div>
-            <h2 id="new-employee-title">Create employee</h2>
+            <h2 id="new-employee-title">Create user</h2>
 
-            <p>Enter the employee&apos;s information below.</p>
+            <p>Enter the user&apos;s information below.</p>
           </div>
 
           <button
@@ -193,13 +213,38 @@ export default function NewEmployeeForm({ onSuccess, onCancel, open }) {
             />
 
             <FormField
+              options={rolesOptions}
+              type="select"
               label="Role"
               name="role"
               value={form.role}
               error={fieldErrors.role}
               onChange={handleChange}
               disabled={isSubmitting}
-              autoComplete="organization-title"
+              autoComplete="role"
+            />
+
+            <FormField
+              options={departmentOptions}
+              type="select"
+              label="Department"
+              name="department"
+              value={form.department}
+              error={fieldErrors.department}
+              onChange={handleChange}
+              disabled={isSubmitting}
+              autoComplete="department"
+            />
+
+
+            <FormField
+              type="date"
+              label="Hire Date"
+              name="hireDate"
+              value={form.hireDate}
+              error={fieldErrors.hireDate}
+              onChange={handleChange}
+              disabled={isSubmitting}
             />
 
             <FormField
@@ -260,6 +305,7 @@ export default function NewEmployeeForm({ onSuccess, onCancel, open }) {
 }
 
 function FormField({
+  options,
   label,
   name,
   type = "text",
@@ -270,12 +316,29 @@ function FormField({
   ...inputProps
 }) {
   const errorId = `${name}-error`;
+  console.log("options in formfield ", options)
 
   return (
     <div className="form-field">
       <label htmlFor={name}>{label}</label>
 
-      <input
+      {type === "select" ? (
+        <select
+          id={name}
+          name={name}
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
+        >
+          <option value="" disabled>Select a department</option>
+          {options.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+      ):(
+        <input
         id={name}
         name={name}
         type={type}
@@ -287,6 +350,7 @@ function FormField({
         className={error ? "form-input input-error" : "form-input"}
         {...inputProps}
       />
+      )}
 
       {error && (
         <p id={errorId} className="field-error">

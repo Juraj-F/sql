@@ -10,7 +10,7 @@ import {
 import FilterData from "./filteredData";
 import styles from './CompanyDashboard.module.css'
 import { fetchJson } from "@/lib/fetchJson.js";
-import NewEmployeeForm from "./newEmployeeForm";
+import NewUserForm from "./newUserForm";
 import { useAuth } from "@clerk/nextjs";
 import DashboardControls from "./dashboardControls";
 import { DEFAULT_FILTERS } from "@/lib/company-dashboard/defaultFilters";
@@ -59,10 +59,10 @@ export default function CompanyDashboard() {
   const [error, setError] = useState("");
   const [mounted, setMounted] = useState(false);
 
-  const [showEmployeeForm, setShowEmployeeForm]= useState(false)
+  const [showUserForm, setShowUserForm]= useState(false)
+console.log("options", options)
 
-
-const handleEmployeeCreated = ()=>{
+const handleUserCreated = ()=>{
 }
 
 useEffect(() => {
@@ -225,7 +225,7 @@ useEffect(() => {
           <h1>Company dashboard</h1>
 
           <p>
-            Explore employees, projects, suppliers,
+            Explore users, projects, suppliers,
             components, customers, and orders.
           </p>
         </div>
@@ -242,17 +242,17 @@ useEffect(() => {
 
        <button
         type="button"
-        onClick={() => setShowEmployeeForm(true)}
+        onClick={() => setShowUserForm(true)}
         className="rounded bg-blue-600 px-4 py-2 text-white"
       >
-        New employee
+        New user
       </button>
 
-      {showEmployeeForm && (
-        <NewEmployeeForm
-          open={showEmployeeForm}
-          onSuccess={handleEmployeeCreated}
-          onCancel={() => setShowEmployeeForm(false)}
+      {showUserForm && (
+        <NewUserForm
+          open={showUserForm}
+          onSuccess={handleUserCreated}
+          onCancel={() => setShowUserForm(false)}
         />
       )}
 
