@@ -18,11 +18,13 @@ export async function POST(request) {
   }
 
   try {
+    console.log("event type", event.type)
 
     if(
       event.type === "user.created"
     ){
-      await upsertClerkUserByEmail(event.data)
+      console.log("event data", event.data)
+      // await upsertClerkUserByEmail(event.data)
       await isnerClerkIdIntoDb(event.data)
     }
 
