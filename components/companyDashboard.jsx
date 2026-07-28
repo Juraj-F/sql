@@ -18,6 +18,7 @@ import { SORT_OPTIONS } from "@/lib/company-dashboard/sortOptions";
 import { buildDashboardQueryString } from "@/lib/company-dashboard/buildDashboardQueryString";
 import { MatchingRecords } from "./matchingRecords";
 import { DashboardTable } from "./dashboardTable";
+import { useRouter } from "next/navigation";
 
 const DEFAULT_PAGE_SIZE = 25;
 
@@ -61,6 +62,7 @@ export default function CompanyDashboard() {
 
   const [showUserForm, setShowUserForm]= useState(false)
 console.log("options", options)
+const router = useRouter()
 
 const handleUserCreated = ()=>{
 }
@@ -229,15 +231,22 @@ useEffect(() => {
             components, customers, and orders.
           </p>
         </div>
+        <div>
+          <button className="page-button status connected"
+            onClick={() => router.push("/sql-dashboard")}
+          >
+            SQL PLAYGROUND
+          </button>
           <DashboardControls />
-
-        <button
+          <button
           type="button"
           onClick={loadRows}
           disabled={loading}
         >
           Refresh
         </button>
+          </div>
+
       </header>
 
        <button

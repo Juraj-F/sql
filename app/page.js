@@ -1,5 +1,5 @@
-import SqlDashboard from "@/components/SqlDashboard";
+import { redirect } from "next/navigation";
 
 export default function HomePage() {
-  return <SqlDashboard />;
+   redirect("/sql-dashboard");
 }

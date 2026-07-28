@@ -6,6 +6,7 @@ import ResultsTable from "@/components/ResultsTable";
 import SchemaList from "@/components/SchemaList";
 import SqlEditor from "@/components/SqlEditor";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
 
 
 const DEFAULT_QUERY = "SELECT * FROM projects LIMIT 20;";
@@ -26,8 +27,15 @@ export default function SqlDashboard() {
   const [error, setError] = useState("");
   const [runInfo, setRunInfo] = useState("");
   const [connected, setConnected] = useState(false);
-
   const router = useRouter()
+
+  const {
+    isLoaded,
+    isSignedIn,
+    userId,
+    orgId,
+    orgRole,
+  } = useAuth();
 
   const runQuery = useCallback(async () => {
     if (!sql.trim() || loadingQuery) return;
