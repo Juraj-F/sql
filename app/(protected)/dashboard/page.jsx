@@ -1,6 +1,11 @@
 import CompanyDashboard from "@/components/companyDashboard";
 
-export default async function CompanyDashboardPage() {
+export default async function CompanyDashboardPage({
+  searchParams,
+}) {
+  const params = await searchParams;
 
-  return <CompanyDashboard />;
+  return (
+    <CompanyDashboard initialParams={params} />
+  );
 }

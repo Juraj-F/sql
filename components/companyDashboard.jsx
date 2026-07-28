@@ -19,6 +19,7 @@ import { buildDashboardQueryString } from "@/lib/company-dashboard/buildDashboar
 import { MatchingRecords } from "./matchingRecords";
 import { DashboardTable } from "./dashboardTable";
 import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 const DEFAULT_PAGE_SIZE = 25;
 
@@ -38,20 +39,23 @@ export default function CompanyDashboard() {
     orgRole,)
 
 
-  const [dataset, setDataset] = useState("projects");
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  const [dataset, setDataset] = useState(searchParams.get("dataset") ?? "projects");
   const [filters, setFilters] = useState(DEFAULT_FILTERS);
   const [options, setOptions] = useState({});
 
   const [rows, setRows] = useState([]);
   const [columns, setColumns] = useState([]);
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
   const [pageSize, setPageSize] =
     useState(DEFAULT_PAGE_SIZE);
 
-  const [sortBy, setSortBy] = useState("start_date");
+  const [sortBy, setSortBy] = useState( searchParams.get("sortBy") ?? "start_date");
   const [sortDirection, setSortDirection] =
-    useState("desc");
+    useState(searchParams.get("direction") ?? "desc");
 
   const [totalRows, setTotalRows] = useState(0);
   const [summary, setSummary] = useState({});
@@ -61,11 +65,43 @@ export default function CompanyDashboard() {
   const [mounted, setMounted] = useState(false);
 
   const [showUserForm, setShowUserForm]= useState(false)
-console.log("options", options)
-const router = useRouter()
 
 const handleUserCreated = ()=>{
 }
+
+useEffect(()=>{
+  const params = new URLSearchParams();
+
+  params.set("dataset", dataset);
+  params.set("page", page);
+  params.set("sortBy", sortBy);
+  params.set("direction", sortDirection);
+
+  console.log("searchParams in dashboard", params )
+
+  if (filters.role) {
+    params.set("role", filters.role);
+  }
+
+  if (filters.search) {
+    params.set("search", filters.search);
+  }
+  if (filters.id){
+     params.set("id", filters.id);
+  }
+    if (filters.email){
+     params.set("email", filters.email);
+  }
+
+  router.replace(`/dashboard?${params.toString()}`);
+
+},[  
+  dataset,
+  page,
+  sortBy,
+  sortDirection,
+  filters,
+  router,])
 
 useEffect(() => {
   setMounted(true);
