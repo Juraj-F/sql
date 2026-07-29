@@ -6,20 +6,22 @@ import {
   useMemo,
   useState,
 } from "react";
+import { useAuth } from "@clerk/nextjs";
+import { useSearchParams, useRouter } from "next/navigation";
 
 import FilterData from "./filteredData";
-import styles from './CompanyDashboard.module.css'
-import { fetchJson } from "@/lib/fetchJson.js";
 import NewUserForm from "./newUserForm";
-import { useAuth } from "@clerk/nextjs";
 import DashboardControls from "./dashboardControls";
+import { MatchingRecords } from "./matchingRecords";
+import { DashboardTable } from "./dashboardTable";
+
+import styles from './CompanyDashboard.module.css';
+
+import { fetchJson } from "@/lib/fetchJson.js";
 import { DEFAULT_FILTERS } from "@/lib/company-dashboard/defaultFilters";
 import { SORT_OPTIONS } from "@/lib/company-dashboard/sortOptions";
 import { buildDashboardQueryString } from "@/lib/company-dashboard/buildDashboardQueryString";
-import { MatchingRecords } from "./matchingRecords";
-import { DashboardTable } from "./dashboardTable";
-import { useRouter } from "next/navigation";
-import { useSearchParams } from "next/navigation";
+
 
 const DEFAULT_PAGE_SIZE = 25;
 
@@ -43,19 +45,25 @@ export default function CompanyDashboard() {
   const searchParams = useSearchParams()
 
   const [dataset, setDataset] = useState(searchParams.get("dataset") ?? "projects");
-  const [filters, setFilters] = useState(DEFAULT_FILTERS);
+  const [filters, setFilters] = useState(() => ({
+  ...DEFAULT_FILTERS,
+  role: searchParams.get("role") ?? "",
+  search: searchParams.get("search") ?? "",
+  id: searchParams.get("id") ?? "",
+  email: searchParams.get("email") ?? "",
+    }));
+
+  const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
+  const [sortBy, setSortBy] = useState( searchParams.get("sortBy") ?? "start_date");
+  const [sortDirection, setSortDirection] = useState(searchParams.get("direction") ?? "desc");
+  const [pageSize, setPageSize] = useState( Number(searchParams.get("pageSize")) ||
+    DEFAULT_PAGE_SIZE);
+
+
   const [options, setOptions] = useState({});
 
   const [rows, setRows] = useState([]);
   const [columns, setColumns] = useState([]);
-
-  const [page, setPage] = useState(Number(searchParams.get("page")) || 1);
-  const [pageSize, setPageSize] =
-    useState(DEFAULT_PAGE_SIZE);
-
-  const [sortBy, setSortBy] = useState( searchParams.get("sortBy") ?? "start_date");
-  const [sortDirection, setSortDirection] =
-    useState(searchParams.get("direction") ?? "desc");
 
   const [totalRows, setTotalRows] = useState(0);
   const [summary, setSummary] = useState({});
@@ -73,31 +81,43 @@ useEffect(()=>{
   const params = new URLSearchParams();
 
   params.set("dataset", dataset);
-  params.set("page", page);
+  params.set("page", String(page));
+  params.set("pageSize", String(pageSize));
   params.set("sortBy", sortBy);
   params.set("direction", sortDirection);
 
   console.log("searchParams in dashboard", params )
 
-  if (filters.role) {
-    params.set("role", filters.role);
+    for (const [name, value] of Object.entries(filters)) {
+    if (
+      value !== "" &&
+      value !== null &&
+      value !== undefined
+    ) {
+      params.set(name, String(value));
+    }
   }
 
-  if (filters.search) {
-    params.set("search", filters.search);
-  }
-  if (filters.id){
-     params.set("id", filters.id);
-  }
-    if (filters.email){
-     params.set("email", filters.email);
-  }
+  // if (filters.role) {
+  //   params.set("role", filters.role);
+  // }
+
+  // if (filters.search) {
+  //   params.set("search", filters.search);
+  // }
+  // if (filters.id){
+  //    params.set("id", filters.id);
+  // }
+  //   if (filters.email){
+  //    params.set("email", filters.email);
+  // }
 
   router.replace(`/dashboard?${params.toString()}`);
 
 },[  
   dataset,
   page,
+  pageSize,
   sortBy,
   sortDirection,
   filters,
