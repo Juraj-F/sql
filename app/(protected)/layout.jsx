@@ -11,7 +11,7 @@ export default async function ProtectedLayout({ children }) {
   }
 
   const user = await findUserByClerkId(userId);
-  console.log("user found", user.rows[0].auth_status)
+  console.log("user found", user.rows[0])
 
   if (!user) {
     redirect("/account-error");

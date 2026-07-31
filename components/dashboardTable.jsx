@@ -1,12 +1,18 @@
      import { formatColumn, formatValue } from "@/lib/company-dashboard/formatters"
-     
+
      export function DashboardTable({
         error,        
         columns,
         loading,
         rows,
-        styles
+        styles,
+        clicked
      }){
+
+      const handleClicked = (row)=>{
+        clicked(row)
+      }
+
         return(
 
       <div className={styles.tableContainer}>
@@ -30,6 +36,7 @@
                     row.id ??
                     `${dataset}-${page}-${rowIndex}`
                   }
+                  onClick={()=>handleClicked(row)}
                 >
                   {columns.map((column) => 
                   {

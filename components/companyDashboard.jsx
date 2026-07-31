@@ -14,6 +14,7 @@ import NewUserForm from "./newUserForm";
 import DashboardControls from "./dashboardControls";
 import { MatchingRecords } from "./matchingRecords";
 import { DashboardTable } from "./dashboardTable";
+import UserDataCard from "./userDataCard";
 
 import styles from './CompanyDashboard.module.css';
 
@@ -33,13 +34,6 @@ export default function CompanyDashboard() {
     orgId,
     orgRole,
   } = useAuth();
-
-  console.log("isLoaded isSignedIn, userId, orgId, orgRole",isLoaded,
-    isSignedIn,
-    userId,
-    orgId,
-    orgRole,)
-
 
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -61,20 +55,32 @@ export default function CompanyDashboard() {
 
 
   const [options, setOptions] = useState({});
-
   const [rows, setRows] = useState([]);
   const [columns, setColumns] = useState([]);
-
   const [totalRows, setTotalRows] = useState(0);
   const [summary, setSummary] = useState({});
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [mounted, setMounted] = useState(false);
-
   const [showUserForm, setShowUserForm]= useState(false)
+  const [clickedRow, setClickedRow]=useState({})
+  const [showUserDataCard, setShowUserDataCard] = useState(false)
+
+ const dataSetIsUsers = dataset === "users"? true : false
 
 const handleUserCreated = ()=>{
+  setShowUserForm(false)
+  loadRows()
+}
+
+const handleUserEditted = ()=>{
+  setShowUserDataCard(false)
+  loadRows()
+}
+
+const handleClickedRow = (data)=>{
+    setShowUserDataCard(true)
+    setClickedRow(data)
 }
 
 useEffect(()=>{
@@ -85,8 +91,6 @@ useEffect(()=>{
   params.set("pageSize", String(pageSize));
   params.set("sortBy", sortBy);
   params.set("direction", sortDirection);
-
-  console.log("searchParams in dashboard", params )
 
     for (const [name, value] of Object.entries(filters)) {
     if (
@@ -320,6 +324,16 @@ useEffect(() => {
           onCancel={() => setShowUserForm(false)}
         />
       )}
+      
+      {showUserDataCard && dataSetIsUsers && (
+        <UserDataCard
+          userData={clickedRow}
+          onClick={()=>setShowUserDataCard(true)}
+          open={showUserDataCard}
+          onSuccess={handleUserEditted}
+          onCancel={() => setShowUserDataCard(false)}
+        />
+      )}
 
       <FilterData
         dataset={dataset}
@@ -409,6 +423,7 @@ useEffect(() => {
         loading={loading}
         rows={rows}
         styles={styles}
+        clicked={(data)=>handleClickedRow(data)}
       />
 
       <footer className={styles.pagination}>

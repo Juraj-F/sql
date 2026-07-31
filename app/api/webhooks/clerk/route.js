@@ -7,6 +7,10 @@ import { deleteUserInDb } from "@/lib/users/deleteUserInDb";
 export async function POST(request) {
   let event;
 
+  console.log("request in webhook",request)
+
+  if(request)return
+
   try {
         console.log("Starting webhook verification");
         event = await verifyWebhook(request);
@@ -72,6 +76,9 @@ export async function POST(request) {
       event.type === "user.updated" &&
       event.data.id
     ) {
+      console.log("update starts")
+      console.log("user updated with event data", event.data)
+      if(event)return
       await updateUserInDb(event.data);
     }
 
